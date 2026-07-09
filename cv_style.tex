@@ -1,0 +1,172 @@
+\usepackage{fontspec}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{needspace}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage[most]{tcolorbox}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+% ---------------------------------------------------------------------------
+% CV STYLE MAP
+% ---------------------------------------------------------------------------
+% This file is the central place for visual changes.
+% - Page margins: edit the \geometry block below.
+% - Header gradient colors: edit cvHeaderGradientStart / cvHeaderGradientEnd.
+% - Header colors: edit cvHeaderGradientStart / cvHeaderGradientEnd,
+%   cvHeaderTitleColor, cvHeaderContentColor, and cvHeaderContactIconColor.
+% - Section heading and rule colors: edit cvSectionHeadingColor / cvSectionRuleColor.
+% - Table fonts: edit \CVTableHeadingFont, \CVTableMetaFont, and \CVTableBodyFont.
+% - Contact/footer colors: edit cvContactIconColor and cvFooterTextColor.
+% - Competence boxes: edit cvCompetenceBorderColor and cvCompetenceHeadingColor.
+
+\geometry{
+  left=20mm,
+  right=20mm,
+  top=20mm,
+  bottom=34mm,
+  footskip=16mm
+}
+
+\IfFontExistsTF{Calibri}{
+  \setmainfont{Calibri}
+}{
+  \setmainfont{TeX Gyre Heros}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+\renewcommand{\arraystretch}{1.0}
+\setlist[itemize]{leftmargin=1.4em, itemsep=0.05em, topsep=0.2em, parsep=0pt}
+
+% Color controls by where the color is used.
+\definecolor{cvHeaderGradientStart}{HTML}{0097B2}
+\definecolor{cvHeaderGradientEnd}{HTML}{7ED957}
+\definecolor{cvHeaderTitleColor}{HTML}{FFFFFF}
+\definecolor{cvHeaderContentColor}{HTML}{FFFFFF}
+\definecolor{cvHeaderContactIconColor}{HTML}{FFFFFF}
+
+\definecolor{cvBodyTextColor}{HTML}{111111}
+\definecolor{cvTableMetaTextColor}{HTML}{6F6F6F}
+\definecolor{cvSectionHeadingColor}{HTML}{1E945C}
+\definecolor{cvSectionRuleColor}{HTML}{111111}
+\definecolor{cvContactIconColor}{HTML}{1E945C}
+\definecolor{cvFooterTextColor}{HTML}{385623}
+\definecolor{cvCompetenceBorderColor}{HTML}{70AD47}
+\definecolor{cvCompetenceHeadingColor}{HTML}{385623}
+\definecolor{cvEducationLabelTextColor}{gray}{0.25}
+
+% Backward-compatible color aliases. New styling should prefer the usage names above.
+\colorlet{cvAccent}{cvHeaderGradientStart}
+\colorlet{cvAccentlight}{cvHeaderGradientEnd}
+\colorlet{cvAccentdark}{cvFooterTextColor}
+\definecolor{cvlightgreen}{HTML}{EEF8E8}
+\colorlet{cvtext}{cvBodyTextColor}
+\colorlet{cvmuted}{cvTableMetaTextColor}
+\colorlet{cvrule}{cvCompetenceBorderColor}
+\colorlet{cvlabel}{cvEducationLabelTextColor}
+
+\hypersetup{colorlinks=true, urlcolor=cvContactIconColor}
+
+% Font controls by where the text appears.
+\newcommand{\CVHeaderNameFont}{\fontsize{22}{26}\selectfont}
+\newcommand{\CVHeaderMetaFont}{\fontsize{10}{12}\selectfont}
+\newcommand{\CVSectionHeadingFont}{\fontsize{18}{21}\selectfont}
+\newcommand{\CVBodyFont}{\fontsize{11}{12.6}\selectfont}
+
+% Table font controls for work and education entries.
+\newcommand{\CVTableHeadingFont}{\fontsize{11}{12.5}\selectfont}
+\newcommand{\CVTableMetaFont}{\fontsize{9}{10.8}\selectfont}
+\newcommand{\CVTableBodyFont}{\fontsize{10.5}{12.6}\selectfont}
+
+\newcommand{\CVFooterFont}{\fontsize{9.4}{11.2}\selectfont}
+
+% Backward-compatible font aliases. New styling should prefer the usage names above.
+\newcommand{\CVNameSize}{\CVHeaderNameFont}
+\newcommand{\CVMetaSize}{\CVHeaderMetaFont}
+\newcommand{\CVSectionSize}{\CVSectionHeadingFont}
+\newcommand{\CVBodySize}{\CVBodyFont}
+\newcommand{\CVEntryHeadingSize}{\CVTableHeadingFont}
+\newcommand{\CVEntrySubheadingSize}{\CVTableMetaFont}
+\newcommand{\CVEntryTextSize}{\CVTableBodyFont}
+\newcommand{\CVFooterSize}{\CVFooterFont}
+
+\AtBeginDocument{\color{cvBodyTextColor}\CVBodyFont}
+
+\newcommand{\CVEmail}{linnea_haugen@hotmail.com}
+\newcommand{\CVEmailDisplay}{linnea\_haugen@hotmail.com}
+\newcommand{\CVPhone}{+45 31 18 12 13}
+\newcommand{\CVPhoneLink}{+4531181213}
+\newcommand{\CVLinkedIn}{www.linkedin.com/in/linnéa-haugen/}
+\newcommand{\CVLinkedInDisplay}{www.linkedin.com/in/linnéa-haugen/}
+
+\newcommand{\CVContactCircleColor}[2]{%
+  \tikz[baseline=(icon.base)]{
+    \node[
+      circle,
+      draw=#1,
+      line width=0.55pt,
+      minimum size=8.5mm,
+      inner sep=0pt,
+      text=#1
+    ] (icon) {\small #2};
+  }%
+}
+
+\newcommand{\CVSection}[2][10\baselineskip]{%
+  \Needspace{#1}
+  \addvspace{1em}
+  {\color{cvSectionHeadingColor}\CVSectionHeadingFont\bfseries #2}\par
+  \vspace{0.4em}
+  {\color{cvSectionRuleColor}\hrule height 0.35pt}
+  \vspace{1.2em}
+}
+
+\newenvironment{cvitemlist}
+{
+  \begin{itemize}[
+    leftmargin=2.5em,
+    labelsep=0.6em,
+    itemsep=0.15em,
+    parsep=0pt,
+    topsep=0.15em,
+    partopsep=0pt
+  ]
+}
+{
+  \end{itemize}
+}
+
+% Table width controls for work and education entries.
+\newcommand{\CVTableMetaColumnWidth}{32mm}
+\newcommand{\CVEducationLabelColumnWidth}{12mm}
+\newcommand{\CVEducationMainColumnWidth}{\dimexpr\textwidth-\CVEducationLabelColumnWidth-\CVTableMetaColumnWidth\relax}
+\newcommand{\CVEducationTitleColumnWidth}{\dimexpr\textwidth-\CVTableMetaColumnWidth\relax}
+\newcommand{\CVEducationDetailColumnWidth}{\dimexpr\textwidth-\CVEducationLabelColumnWidth\relax}
+
+% Backward-compatible width aliases. New styling should prefer the usage names above.
+\newcommand{\CVEntryMetaWidth}{\CVTableMetaColumnWidth}
+\newcommand{\CVEducationLabelWidth}{\CVEducationLabelColumnWidth}
+\newcommand{\CVEducationMainWidth}{\CVEducationMainColumnWidth}
+\newcommand{\CVEducationTitleWidth}{\CVEducationTitleColumnWidth}
+\newcommand{\CVEducationDetailWidth}{\CVEducationDetailColumnWidth}
+\newcommand{\CVEducationTableSetup}{%
+  \Needspace{6\baselineskip}%
+  \begingroup
+  \setlength{\parskip}{0pt}%
+  \setlength{\tabcolsep}{0pt}%
+  \renewcommand{\arraystretch}{0.90}%
+}
+
+\newcommand{\CVCompetenceIconSize}{6.5mm}
+
+
+
+\newcommand{\CVSoftBreak}{\vspace{0.2em}}
