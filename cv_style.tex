@@ -166,7 +166,234 @@
 }
 
 \newcommand{\CVCompetenceIconSize}{6.5mm}
+\newcommand{\CVCompetenceBorderThickness}{0.65pt}
 
 
 
 \newcommand{\CVSoftBreak}{\vspace{0.2em}}
+
+
+%% --------------------------------------------------
+%% Models
+%% --------------------------------------------------
+
+% --------------- Competence Box ---------------
+\newcommand{\CompetenceBox}[3]{%
+  \par\noindent
+  \begin{tcolorbox}[
+    enhanced,
+    sharp corners,
+    colback=white,
+    frame hidden,
+    borderline={\CVCompetenceBorderThickness}{0pt}{cvCompetenceBorderColor},
+    left=0.5em,
+    right=0.5em,
+    top=0.5em,
+    bottom=0.5em,
+    width=\linewidth,
+    boxsep=0pt,
+    valign=top
+  ]
+    \begin{tabularx}{\dimexpr\linewidth-2pt\relax}{@{}m{1.5em}X@{}}
+
+    \includegraphics[width=\CVCompetenceIconSize]{#1}
+    &
+    {\bfseries\color{cvCompetenceHeadingColor}#2}
+    \\[0.35em]
+
+    &
+
+    \begin{itemize}[leftmargin=1.3em, topsep=0pt]
+        #3
+    \end{itemize}
+
+
+    \end{tabularx}
+  \end{tcolorbox}%
+  \par
+}
+
+% ---------- Work experience model ----------
+% Work entries pass raw \item lines through the `items` key.
+% The model owns the cvitemlist wrapper so bullet spacing can be changed once.
+
+\ExplSyntaxOn
+
+\tl_new:N \l_cv_work_title_tl
+\tl_new:N \l_cv_work_title_regular_tl
+\tl_new:N \l_cv_work_organization_tl
+\tl_new:N \l_cv_work_dates_tl
+\tl_new:N \l_cv_work_location_tl
+\tl_new:N \l_cv_work_items_tl
+
+\keys_define:nn { cv / work }
+  {
+    title        .tl_set:N = \l_cv_work_title_tl,
+    title_regular .tl_set:N = \l_cv_work_title_regular_tl,
+    organization .tl_set:N = \l_cv_work_organization_tl,
+    dates        .tl_set:N = \l_cv_work_dates_tl,
+    location     .tl_set:N = \l_cv_work_location_tl,
+    items        .tl_set:N = \l_cv_work_items_tl,
+  }
+
+\cs_new_protected:Npn \cv_work_clear:
+  {
+    \tl_clear:N \l_cv_work_title_tl
+    \tl_clear:N \l_cv_work_title_regular_tl
+    \tl_clear:N \l_cv_work_organization_tl
+    \tl_clear:N \l_cv_work_dates_tl
+    \tl_clear:N \l_cv_work_location_tl
+    \tl_clear:N \l_cv_work_items_tl
+  }
+
+\cs_new_protected:Npn \cv_work_print_title:
+  {
+    \CVTableHeadingFont
+    {\bfseries \tl_use:N \l_cv_work_title_tl}
+    \tl_if_empty:NF \l_cv_work_title_regular_tl
+      {~\tl_use:N \l_cv_work_title_regular_tl}
+  }
+
+\cs_new_protected:Npn \cv_work_print:
+  {
+    \Needspace{8\baselineskip}
+    \begingroup
+    \setlength{\parskip}{0pt}
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{1.0}
+
+    \par\noindent
+    \begin{tabularx}{\textwidth}{
+      B
+      >{\raggedleft\arraybackslash}b{\CVTableMetaColumnWidth}
+    }
+      {\cv_work_print_title:} &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_work_dates_tl} \\
+
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_work_organization_tl} &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_work_location_tl} \\
+    \end{tabularx}
+    \par
+
+    \vspace{0.25em}
+
+    {\CVTableBodyFont
+      \begin{cvitemlist}
+        \tl_use:N \l_cv_work_items_tl
+      \end{cvitemlist}
+    }
+
+    \endgroup
+  }
+
+\NewDocumentCommand{\WorkEntry}{m}
+  {
+    \cv_work_clear:
+    \keys_set:nn { cv / work } { #1 }
+    \cv_work_print:
+  }
+
+\ExplSyntaxOff
+
+
+% ---------- Education model ----------
+% Reusable key-value object for education entries.
+% Loaded once from main.tex, after cv_style.tex and before \begin{document}.
+
+\ExplSyntaxOn
+
+\newcolumntype{B}{>{\raggedright\arraybackslash}X}
+\renewcommand\tabularxcolumn[1]{b{#1}}
+
+\tl_new:N \l_cv_education_title_tl
+\tl_new:N \l_cv_education_title_regular_tl
+\tl_new:N \l_cv_education_institution_tl
+\tl_new:N \l_cv_education_dates_tl
+\tl_new:N \l_cv_education_location_tl
+\tl_new:N \l_cv_education_area_tl
+\tl_new:N \l_cv_education_focus_tl
+
+\keys_define:nn { cv / education }
+  {
+    title       .tl_set:N = \l_cv_education_title_tl,
+    title_regular .tl_set:N = \l_cv_education_title_regular_tl,
+    institution .tl_set:N = \l_cv_education_institution_tl,
+    dates       .tl_set:N = \l_cv_education_dates_tl,
+    location    .tl_set:N = \l_cv_education_location_tl,
+    area        .tl_set:N = \l_cv_education_area_tl,
+    focus       .tl_set:N = \l_cv_education_focus_tl,
+  }
+
+\cs_new_protected:Npn \cv_education_clear:
+  {
+    \tl_clear:N \l_cv_education_title_tl
+    \tl_clear:N \l_cv_education_title_regular_tl
+    \tl_clear:N \l_cv_education_institution_tl
+    \tl_clear:N \l_cv_education_dates_tl
+    \tl_clear:N \l_cv_education_location_tl
+    \tl_clear:N \l_cv_education_area_tl
+    \tl_clear:N \l_cv_education_focus_tl
+  }
+
+\cs_new_protected:Npn \cv_education_print_title:
+  {
+    \CVTableHeadingFont
+    {\bfseries \tl_use:N \l_cv_education_title_tl}
+    \tl_if_empty:NF \l_cv_education_title_regular_tl
+      {~\tl_use:N \l_cv_education_title_regular_tl}
+  }
+
+\cs_new_protected:Npn \cv_education_print:
+  {
+    \Needspace{6\baselineskip}
+    \begingroup
+    \setlength{\parskip}{0pt}
+    \setlength{\tabcolsep}{2pt}
+    \setlength{\arrayrulewidth}{0.4pt}
+    \renewcommand{\arraystretch}{1.0}
+
+    \par\noindent
+    \begin{tabularx}{\textwidth}{
+      B
+      >{\raggedleft\arraybackslash}b{\CVTableMetaColumnWidth}
+    }
+      
+      {\cv_education_print_title:} &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_education_dates_tl} \\
+      
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_education_institution_tl} &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_education_location_tl} \\
+      
+    \end{tabularx}
+    \par
+
+    \vspace{0.25em}
+
+    \noindent
+    \begin{tabularx}{\textwidth}{
+      >{\raggedright\arraybackslash\color{cvEducationLabelTextColor}}m{\CVEducationLabelColumnWidth}
+      >{\raggedright\arraybackslash}X
+    }
+      
+      {\CVTableBodyFont Area:} & {\CVTableBodyFont \tl_use:N \l_cv_education_area_tl} \\
+      
+
+      \tl_if_blank:VF \l_cv_education_focus_tl
+        {
+          {\CVTableBodyFont Focus:} & {\CVTableBodyFont \tl_use:N \l_cv_education_focus_tl} \\
+          
+        }
+    \end{tabularx}
+    \par
+
+    \endgroup
+  }
+
+\NewDocumentCommand{\Education}{m}
+  {
+    \cv_education_clear:
+    \keys_set:nn { cv / education } { #1 }
+    \cv_education_print:
+  }
+
+\ExplSyntaxOff
