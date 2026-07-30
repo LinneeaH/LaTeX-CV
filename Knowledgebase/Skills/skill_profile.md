@@ -73,11 +73,15 @@ When generating application material:
 - Python
 - SQL
 - MATLAB
-- C#
+- C# / .NET
 - JavaScript
 - HTML
 - CSS
 - XML
+- YAML
+- Java
+- Anaconda
+- Android Studio
 
 ## Data Engineering & Data Management
 
@@ -91,6 +95,11 @@ When generating application material:
 - JSON
 - JSON Schema
 - IDS Schema
+- FAIR Data Principles
+- Metadata Handling
+- Parquet
+- Elasticsearch
+- AWS
 
 ## Artificial Intelligence & Machine Learning
 
@@ -100,6 +109,17 @@ When generating application material:
 - U-Net
 - Mask R-CNN
 - PyTorch
+- Classical Machine Learning (KNN, PCA, ..)
+- Regression
+- Random Forest
+- Ensemble Methods
+- CNN
+- RNN
+- LSTM
+- Generative Models (CycleGAN – exposure)
+- Reinforcement Learning (introductory)
+- Large Language Models (introductory / exploratory)
+- Model Interpretability
 
 ## Scientific Computing
 
@@ -146,6 +166,16 @@ When generating application material:
 - Miro
 - LaTeX
 
+## BI / Visualisation
+- Dashboards
+
+## UX/Product
+- Human-Computer Interaction
+- Design Thinking
+- Markdown
+- Storylane
+- WordPress
+
 ---
 
 # Professional Capabilities
@@ -185,6 +215,10 @@ When generating application material:
 - Scientific Communication
 - Presentation
 - Active Listening
+- Backlog Structuring
+- Prioritisation
+- Onboarding
+- Change Awareness
 
 ## Delivery & Ways of Working
 
@@ -217,6 +251,7 @@ When generating application material:
 
 ---
 
+
 # Natural Strengths
 
 Recurring characteristics demonstrated across education and professional experience.
@@ -232,6 +267,18 @@ Recurring characteristics demonstrated across education and professional experie
 - Communicates technical concepts in a way that supports informed decision-making.
 - Places strong emphasis on quality, robustness, reproducibility, and long-term maintainability.
 - Curious and intrinsically motivated to understand underlying mechanisms rather than applying solutions mechanically.
+- Adapts communication, documentation, and explanations to the audience's mental model rather than assuming shared knowledge
+- Identifies implicit assumptions and makes them explicit before decisions, documentation, or implementation.
+- Evaluates solutions from the perspective of the people who must use them rather than only the people who design them.
+- Seeks to understand complete systems by observing multiple professions, workflows, and perspectives rather than focusing only on a single technical component.
+
+
+## Learning & Adaptation
+
+- Quickly becomes productive in new tools by mapping concepts to existing knowledge.
+- Comfortable learning independently through documentation and experimentation.
+- Prefers understanding underlying models and assumptions before implementation.
+- Focuses on transferable concepts rather than tool-specific memorisation.
 
 ---
 
