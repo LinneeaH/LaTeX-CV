@@ -1,1 +1,21 @@
 .texmf-var/
+
+# Folders 
+X_Sent_CVs/
+tmp/
+latex_render/
+
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
+# PDF output
+main.pdf

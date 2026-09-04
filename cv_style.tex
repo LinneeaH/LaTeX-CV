@@ -1,6 +1,6 @@
 \usepackage{fontspec}
 \usepackage{geometry}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{array}
@@ -12,6 +12,7 @@
 \usepackage[most]{tcolorbox}
 \usepackage{graphicx}
 \usepackage[normalem]{ulem}
+\usepackage{graphicx}
 \useunder{\uline}{\ul}{}
 
 % ---------------------------------------------------------------------------
@@ -394,6 +395,61 @@
     \cv_education_clear:
     \keys_set:nn { cv / education } { #1 }
     \cv_education_print:
+  }
+
+\ExplSyntaxOff
+
+
+% ---------- Certificate model ----------
+
+\ExplSyntaxOn
+
+\tl_new:N \l_cv_certificate_title_tl
+\tl_new:N \l_cv_certificate_issuer_tl
+\tl_new:N \l_cv_certificate_date_tl
+
+\keys_define:nn { cv / certificate }
+  {
+    title  .tl_set:N = \l_cv_certificate_title_tl,
+    issuer .tl_set:N = \l_cv_certificate_issuer_tl,
+    date   .tl_set:N = \l_cv_certificate_date_tl,
+  }
+
+\cs_new_protected:Npn \cv_certificate_clear:
+  {
+    \tl_clear:N \l_cv_certificate_title_tl
+    \tl_clear:N \l_cv_certificate_issuer_tl
+    \tl_clear:N \l_cv_certificate_date_tl
+  }
+
+\cs_new_protected:Npn \cv_certificate_print:
+  {
+    \Needspace{3\baselineskip}
+    \begingroup
+    \setlength{\parskip}{0pt}
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{1.0}
+
+    \par\noindent
+    \begin{tabularx}{\textwidth}{
+      B
+      >{\raggedleft\arraybackslash}b{\CVTableMetaColumnWidth}
+    }
+      {\CVTableHeadingFont\bfseries\tl_use:N \l_cv_certificate_title_tl} &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_certificate_date_tl} \\
+
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_certificate_issuer_tl} &
+      \\
+    \end{tabularx}
+
+    \endgroup
+  }
+
+\NewDocumentCommand{\Certificate}{m}
+  {
+    \cv_certificate_clear:
+    \keys_set:nn { cv / certificate } { #1 }
+    \cv_certificate_print:
   }
 
 \ExplSyntaxOff
