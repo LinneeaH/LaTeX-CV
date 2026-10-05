@@ -48,8 +48,8 @@
 \setlist[itemize]{leftmargin=1.4em, itemsep=0.05em, topsep=0.2em, parsep=0pt}
 
 % Color controls by where the color is used.
-\definecolor{cvHeaderGradientStart}{HTML}{0097B2}
-\definecolor{cvHeaderGradientEnd}{HTML}{7ED957}
+\definecolor{cvHeaderGradientStart}{HTML}{1E945C}
+\definecolor{cvHeaderGradientEnd}{HTML}{1E945C}
 \definecolor{cvHeaderTitleColor}{HTML}{FFFFFF}
 \definecolor{cvHeaderContentColor}{HTML}{FFFFFF}
 \definecolor{cvHeaderContactIconColor}{HTML}{FFFFFF}
@@ -166,53 +166,77 @@
   \renewcommand{\arraystretch}{0.90}%
 }
 
-\newcommand{\CVCompetenceIconSize}{6.5mm}
-\newcommand{\CVCompetenceBorderThickness}{0.65pt}
-
-
 
 \newcommand{\CVSoftBreak}{\vspace{0.2em}}
+
+% ---------- Competences ----------
+
+% Competence category title
+\newcommand{\CVCompetenceTitleFont}{\CVTableBodyFont\bfseries}
+
+% Competence list
+\newcommand{\CVCompetenceSkillsFont}{\CVTableBodyFont}
+
+% ---------- Languages ----------
+
+% Language name
+\newcommand{\CVLanguageNameFont}{\CVTableBodyFont\bfseries}
+
+% Language proficiency level
+\newcommand{\CVLanguageLevelFont}{\CVTableBodyFont}
+
+% Separator between language entries
+%\newcommand{\CVLanguageSeparator}{\enspace\textperiodcentered\enspace}
+\newcommand{\CVLanguageSeparator}{\enspace|\enspace}
+
+
 
 
 %% --------------------------------------------------
 %% Models
 %% --------------------------------------------------
 
-% --------------- Competence Box ---------------
-\newcommand{\CompetenceBox}[3]{%
-  \par\noindent
-  \begin{tcolorbox}[
-    enhanced,
-    sharp corners,
-    colback=white,
-    frame hidden,
-    borderline={\CVCompetenceBorderThickness}{0pt}{cvCompetenceBorderColor},
-    left=0.5em,
-    right=0.5em,
-    top=0.5em,
-    bottom=0.5em,
-    width=\linewidth,
-    boxsep=0pt,
-    valign=top
-  ]
-    \begin{tabularx}{\dimexpr\linewidth-2pt\relax}{@{}m{1.5em}X@{}}
+% ---------- Competence model ----------
+% Reusable key-value object for competence entries.
 
-    \includegraphics[width=\CVCompetenceIconSize]{#1}
-    &
-    {\bfseries\color{cvCompetenceHeadingColor}#2}
-    \\[0.35em]
+\ExplSyntaxOn
 
-    &
+\tl_new:N \l_cv_competence_title_tl
+\tl_new:N \l_cv_competence_skills_tl
 
-    \begin{itemize}[leftmargin=1.3em, topsep=0pt]
-        #3
-    \end{itemize}
+\keys_define:nn { cv / competence }
+  {
+    title  .tl_set:N = \l_cv_competence_title_tl,
+    skills .tl_set:N = \l_cv_competence_skills_tl,
+  }
 
+\cs_new_protected:Npn \cv_competence_clear:
+  {
+    \tl_clear:N \l_cv_competence_title_tl
+    \tl_clear:N \l_cv_competence_skills_tl
+  }
 
-    \end{tabularx}
-  \end{tcolorbox}%
-  \par
-}
+\cs_new_protected:Npn \cv_competence_print:
+  {
+    \par\noindent
+    {\CVCompetenceTitleFont
+     \tl_use:N \l_cv_competence_title_tl
+     \textnormal{:}}
+    ~
+    {\CVCompetenceSkillsFont
+    \enspace
+     \tl_use:N \l_cv_competence_skills_tl}
+    \par
+  }
+
+\NewDocumentCommand{\Competence}{m}
+  {
+    \cv_competence_clear:
+    \keys_set:nn { cv / competence } { #1 }
+    \cv_competence_print:
+  }
+
+\ExplSyntaxOff
 
 % ---------- Work experience model ----------
 % Work entries pass raw \item lines through the `items` key.
@@ -225,6 +249,7 @@
 \tl_new:N \l_cv_work_organization_tl
 \tl_new:N \l_cv_work_dates_tl
 \tl_new:N \l_cv_work_location_tl
+\tl_new:N \l_cv_work_description_tl
 \tl_new:N \l_cv_work_items_tl
 
 \keys_define:nn { cv / work }
@@ -234,6 +259,7 @@
     organization .tl_set:N = \l_cv_work_organization_tl,
     dates        .tl_set:N = \l_cv_work_dates_tl,
     location     .tl_set:N = \l_cv_work_location_tl,
+    description  .tl_set:N = \l_cv_work_description_tl,
     items        .tl_set:N = \l_cv_work_items_tl,
   }
 
@@ -244,6 +270,7 @@
     \tl_clear:N \l_cv_work_organization_tl
     \tl_clear:N \l_cv_work_dates_tl
     \tl_clear:N \l_cv_work_location_tl
+    \tl_clear:N \l_cv_work_description_tl
     \tl_clear:N \l_cv_work_items_tl
   }
 
@@ -252,7 +279,7 @@
     \CVTableHeadingFont
     {\bfseries \tl_use:N \l_cv_work_title_tl}
     \tl_if_empty:NF \l_cv_work_title_regular_tl
-      {~\tl_use:N \l_cv_work_title_regular_tl}
+      {, ~\tl_use:N \l_cv_work_title_regular_tl}
   }
 
 \cs_new_protected:Npn \cv_work_print:
@@ -276,7 +303,13 @@
     \end{tabularx}
     \par
 
-    \vspace{0.25em}
+    \tl_if_empty:NF \l_cv_work_description_tl
+      {
+        \vspace{0.5em}
+        \CVTableBodyFont\tl_use:N \l_cv_work_description_tl
+      }
+
+    \vspace{0.5em}
 
     {\CVTableBodyFont
       \begin{cvitemlist}
@@ -316,13 +349,13 @@
 
 \keys_define:nn { cv / education }
   {
-    title       .tl_set:N = \l_cv_education_title_tl,
+    title         .tl_set:N = \l_cv_education_title_tl,
     title_regular .tl_set:N = \l_cv_education_title_regular_tl,
-    institution .tl_set:N = \l_cv_education_institution_tl,
-    dates       .tl_set:N = \l_cv_education_dates_tl,
-    location    .tl_set:N = \l_cv_education_location_tl,
-    area        .tl_set:N = \l_cv_education_area_tl,
-    focus       .tl_set:N = \l_cv_education_focus_tl,
+    institution   .tl_set:N = \l_cv_education_institution_tl,
+    dates         .tl_set:N = \l_cv_education_dates_tl,
+    location      .tl_set:N = \l_cv_education_location_tl,
+    area          .tl_set:N = \l_cv_education_area_tl,
+    focus         .tl_set:N = \l_cv_education_focus_tl,
   }
 
 \cs_new_protected:Npn \cv_education_clear:
@@ -341,7 +374,7 @@
     \CVTableHeadingFont
     {\bfseries \tl_use:N \l_cv_education_title_tl}
     \tl_if_empty:NF \l_cv_education_title_regular_tl
-      {~\tl_use:N \l_cv_education_title_regular_tl}
+      {, ~\tl_use:N \l_cv_education_title_regular_tl}
   }
 
 \cs_new_protected:Npn \cv_education_print:
@@ -358,35 +391,23 @@
       B
       >{\raggedleft\arraybackslash}b{\CVTableMetaColumnWidth}
     }
-      
-      {\cv_education_print_title:} &
-      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_education_dates_tl} \\
-      
-      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_education_institution_tl} &
-      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_education_location_tl} \\
-      
+
+      {
+        \cv_education_print_title:
+        \enspace\textperiodcentered\enspace
+        {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}
+         \tl_use:N \l_cv_education_institution_tl}
+        \enspace\textperiodcentered\enspace
+        {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}
+         \tl_use:N \l_cv_education_location_tl}
+      }
+      &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}
+       \tl_use:N \l_cv_education_dates_tl}
+      \\
+
     \end{tabularx}
     \par
-
-    \vspace{0.25em}
-
-    \noindent
-    \begin{tabularx}{\textwidth}{
-      >{\raggedright\arraybackslash\color{cvEducationLabelTextColor}}m{\CVEducationLabelColumnWidth}
-      >{\raggedright\arraybackslash}X
-    }
-      
-      {\CVTableBodyFont Area:} & {\CVTableBodyFont \tl_use:N \l_cv_education_area_tl} \\
-      
-
-      \tl_if_blank:VF \l_cv_education_focus_tl
-        {
-          {\CVTableBodyFont Focus:} & {\CVTableBodyFont \tl_use:N \l_cv_education_focus_tl} \\
-          
-        }
-    \end{tabularx}
-    \par
-
     \endgroup
   }
 
@@ -400,34 +421,38 @@
 \ExplSyntaxOff
 
 
+
 % ---------- Certificate model ----------
+% Reusable key-value object for certificate entries.
+% Loaded once from main.tex, after cv_style.tex and before \begin{document}.
 
 \ExplSyntaxOn
 
 \tl_new:N \l_cv_certificate_title_tl
 \tl_new:N \l_cv_certificate_issuer_tl
-\tl_new:N \l_cv_certificate_date_tl
+\tl_new:N \l_cv_certificate_year_tl
 
 \keys_define:nn { cv / certificate }
   {
     title  .tl_set:N = \l_cv_certificate_title_tl,
     issuer .tl_set:N = \l_cv_certificate_issuer_tl,
-    date   .tl_set:N = \l_cv_certificate_date_tl,
+    year   .tl_set:N = \l_cv_certificate_year_tl,
   }
 
 \cs_new_protected:Npn \cv_certificate_clear:
   {
     \tl_clear:N \l_cv_certificate_title_tl
     \tl_clear:N \l_cv_certificate_issuer_tl
-    \tl_clear:N \l_cv_certificate_date_tl
+    \tl_clear:N \l_cv_certificate_year_tl
   }
 
 \cs_new_protected:Npn \cv_certificate_print:
   {
-    \Needspace{3\baselineskip}
+    \Needspace{2\baselineskip}
     \begingroup
     \setlength{\parskip}{0pt}
     \setlength{\tabcolsep}{2pt}
+    \setlength{\arrayrulewidth}{0.4pt}
     \renewcommand{\arraystretch}{1.0}
 
     \par\noindent
@@ -435,12 +460,21 @@
       B
       >{\raggedleft\arraybackslash}b{\CVTableMetaColumnWidth}
     }
-      {\CVTableHeadingFont\bfseries\tl_use:N \l_cv_certificate_title_tl} &
-      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_certificate_date_tl} \\
 
-      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}\tl_use:N \l_cv_certificate_issuer_tl} &
+      {
+        {\CVTableHeadingFont\bfseries
+         \tl_use:N \l_cv_certificate_title_tl}
+        \enspace\textperiodcentered\enspace
+        {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}
+         \tl_use:N \l_cv_certificate_issuer_tl}
+      }
+      &
+      {\CVTableMetaFont\itshape\color{cvTableMetaTextColor}
+       \tl_use:N \l_cv_certificate_year_tl}
       \\
+
     \end{tabularx}
+    \par
 
     \endgroup
   }
@@ -450,6 +484,47 @@
     \cv_certificate_clear:
     \keys_set:nn { cv / certificate } { #1 }
     \cv_certificate_print:
+  }
+
+\ExplSyntaxOff
+
+
+% ---------- Language model ----------
+% Reusable key-value object for language entries.
+
+\ExplSyntaxOn
+
+\tl_new:N \l_cv_language_language_tl
+\tl_new:N \l_cv_language_level_tl
+
+\keys_define:nn { cv / language }
+  {
+    language .tl_set:N = \l_cv_language_language_tl,
+    level    .tl_set:N = \l_cv_language_level_tl,
+  }
+
+\cs_new_protected:Npn \cv_language_clear:
+  {
+    \tl_clear:N \l_cv_language_language_tl
+    \tl_clear:N \l_cv_language_level_tl
+  }
+
+\cs_new_protected:Npn \cv_language_print:
+  {
+    {\CVLanguageNameFont
+     \tl_use:N \l_cv_language_language_tl
+     \textnormal{:}}
+    ~
+    {\CVLanguageLevelFont
+     \enspace
+     \tl_use:N \l_cv_language_level_tl}
+  }
+
+\NewDocumentCommand{\Language}{m}
+  {
+    \cv_language_clear:
+    \keys_set:nn { cv / language } { #1 }
+    \cv_language_print:
   }
 
 \ExplSyntaxOff

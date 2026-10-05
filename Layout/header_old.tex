@@ -1,0 +1,66 @@
+% Header content. Edit these values to change the visible header text.
+\newcommand{\CVHeaderTitle}{Linnéa Haugen}
+\newcommand{\CVHeaderStrengthsLine}{MSc Biomedical Engineering \textbar{} 2610 Rødovre}
+\newcommand{\CVHeaderPhoneDisplay}{\CVPhone}
+
+% Header layout. These lengths belong to the one-off header component.
+% \CVHeaderHeight controls the minimum colored box height.
+% \CVHeaderContentTop controls the title's distance from the top of the colored box.
+% \CVHeaderContentBottomPadding controls the space below the icon row.
+\newlength{\CVHeaderHeight}
+\setlength{\CVHeaderHeight}{45mm}
+
+\newlength{\CVHeaderContentTop}
+\setlength{\CVHeaderContentTop}{5em}
+
+\newlength{\CVHeaderContentBottomPadding}
+\setlength{\CVHeaderContentBottomPadding}{1.5em}
+
+% Internal measurements used to align the header to the document text block and
+% reserve enough vertical space so the body cannot overlap the header.
+\newlength{\CVHeaderTextLeft}
+\newlength{\CVHeaderTextTop}
+\newlength{\CVHeaderContentBottom}
+\newlength{\CVHeaderReservedBottom}
+\newsavebox{\CVHeaderContentBox}
+
+\newcommand{\CVHeaderContent}{%
+  \begin{minipage}{\textwidth}
+    {\CVHeaderNameFont\bfseries\textcolor{cvHeaderTitleColor}{\CVHeaderTitle}}\\[0.65em]
+    {\CVHeaderMetaFont\textcolor{cvHeaderContentColor}{\CVHeaderStrengthsLine}}\\[0.5em]
+    \href{mailto:\CVEmail}{\CVContactCircleColor{cvHeaderContactIconColor}{\faEnvelope[regular]}}\hspace{1em}
+    \href{https://\CVLinkedIn}{\CVContactCircleColor{cvHeaderContactIconColor}{\faLinkedinIn}}\hspace{1em}
+    \href{tel:\CVPhoneLink}{\CVContactCircleColor{cvHeaderContactIconColor}{\faPhone}}\hspace{1em}
+    \href{tel:\CVPhoneLink}{\textcolor{cvHeaderContentColor}{\CVHeaderMetaFont \CVHeaderPhoneDisplay}}
+  \end{minipage}%
+}
+
+% Header text colors are defined in cv_style.tex:
+% cvHeaderTitleColor, cvHeaderContentColor, and cvHeaderContactIconColor.
+\newcommand{\CVHeader}{%
+  \sbox{\CVHeaderContentBox}{\CVHeaderContent}%
+  \setlength{\CVHeaderTextLeft}{\dimexpr 1in+\hoffset+\oddsidemargin\relax}%
+  \setlength{\CVHeaderTextTop}{\dimexpr 1in+\voffset+\topmargin+\headheight+\headsep\relax}%
+  \setlength{\CVHeaderContentBottom}{\dimexpr \CVHeaderContentTop+\ht\CVHeaderContentBox+\dp\CVHeaderContentBox+\CVHeaderContentBottomPadding\relax}%
+  \setlength{\CVHeaderReservedBottom}{\CVHeaderHeight}%
+  \ifdim\CVHeaderContentBottom>\CVHeaderReservedBottom
+    \setlength{\CVHeaderReservedBottom}{\CVHeaderContentBottom}%
+  \fi
+  \begin{tikzpicture}[remember picture,overlay]
+    \path[
+      left color=cvHeaderGradientStart,
+      right color=cvHeaderGradientEnd
+    ] (current page.north west) rectangle ([yshift=-\CVHeaderReservedBottom]current page.north east);
+    \draw[black,line width=0.45pt]
+      ([yshift=-\CVHeaderReservedBottom]current page.north west) --
+      ([yshift=-\CVHeaderReservedBottom]current page.north east);
+    \node[anchor=north west,inner sep=0pt,align=left]
+      at ([xshift=\CVHeaderTextLeft,yshift=-\CVHeaderContentTop]current page.north west)
+      {\usebox{\CVHeaderContentBox}};
+  \end{tikzpicture}%
+  \ifdim\CVHeaderReservedBottom>\CVHeaderTextTop
+    \vspace*{\dimexpr \CVHeaderReservedBottom-\CVHeaderTextTop\relax}%
+  \fi
+}
+
+\CVHeader
